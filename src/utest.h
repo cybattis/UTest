@@ -4,7 +4,7 @@
  * Author       : Stb47 (contact@cbgr.anonaddy.com)
  * -----
  * Created Date : 06.07.2021, 19:49:30
- * Last Modified: 10.07.2021, 00:20:05
+ * Last Modified: 11.07.2021, 00:01:39
  */
 
 #ifndef UTEST_H
@@ -12,16 +12,16 @@
 
 #include <stdio.h>
 
-typedef struct utest_storage {
+/* struct holding data from test suite (name, number, failed, ignored) */
+typedef struct UTEST_DATA_SUITE {
+    char const *test_suite_name;
     int number;
     int failed;
     int ignored;
-} utest_storage ;
-/* struct holding stats of the test suite (nbr, failed, ignored) */
-utest_storage utest;    
+    int status;
+}   UTEST_DATA;
 
-static int test_status;
-static int test_ignored;
+UTEST_DATA utest;    
 
 #define OK      "\033[32mOK\033[00m"
 #define PASS    "\033[32mPASS\033[00m"
@@ -29,22 +29,20 @@ static int test_ignored;
 #define FAIL    "\033[31mFAIL\033[00m"
 #define ERROR   "\033[31mERROR\033[00m"
 
-#define UTEST_PRINT(name)   utest_print(__FILE__, __LINE__, name)
-#define PRINT_PASS()        printf("%s\n", PASS)
-#define PRINT_FAIL()        printf("%s\n", FAIL)
-#define PRINT_IGNORE()      printf("%s\n", IGNORE)
+#define TEST_FAIL   0
+#define TEST_PASS   1
+#define TEST_IGNORE 2
 
-#define TRUE    0
-#define FALSE   1
-
-#define CHECK(condition, test_suite)            if (condition) test_status = TRUE; else { test_status = FALSE; test_suite; }
+#define UTEST_PRINT(name)                       utest_print(__FILE__, __LINE__, name)
+#define CHECK(condition, test_suite)            if (condition) utest.status = TEST_PASS; else { utest.status = TEST_FAIL; test_suite; }
 
 
 /* macros to define a test suite */
-#define UTEST_BEGIN()                           utest_begin(utest)                      // Set up the test suite variables
-#define UTEST_END()                             utest_end(utest)                        // Print the stats and the result of the test suite
-#define TEST_IGNORE()                           test_ignored = TRUE; utest.ignored++
-#define RUN_TEST(test, ...)                     test_ignored = FALSE; utest.number++; __VA_ARGS__; test  // Run a test and add it to the pool
+
+#define UTEST_BEGIN(name)                       utest_begin(utest, name);                  
+#define UTEST_END()                             utest_end(utest)                        
+#define IGNORE_TEST()                           utest.status = TEST_IGNORE; utest.ignored++                                                   
+#define RUN_TEST(test, ...)                     utest.status = TEST_FAIL; utest.number++; __VA_ARGS__; if (utest.status != TEST_IGNORE) test  // Set up and Run a test and add it to the pool
 
 #define ASSERT(condition)                       if(condition) {} else fprintf(stderr,"./%s:%d: assert (%s) %s\n", __FILE__, __LINE__ , #condition, ERROR)
 #define ASSERT_MSG(condition, message)          if(condition) {} else fprintf(stderr,"./%s:%d: %s %s\n", __FILE__, __LINE__, ERROR, message)
@@ -58,31 +56,35 @@ static int test_ignored;
 #define STR_UNIT(actual, expected, name)        CHECK(!utest_strcmp(actual, expected) UTEST_PRINT(name)
 
 
-/* Test suit internal */
+/****************************\
+ *    Test suit internal
+ ****************************/
 
 /* Print test log result */
 void utest_print(char const *file, int line, char const *name)
 {
     fprintf(stderr, "./%s:%d: test %s: ", file , line, name);
-    if (test_ignored == TRUE)
-        PRINT_IGNORE();
-    else if (test_status == TRUE)
-        PRINT_PASS();
+    if (utest.status == TEST_IGNORE)
+        printf("%s\n", IGNORE);
+    else if (utest.status == TEST_PASS)
+        printf("%s\n", PASS);
     else
-        PRINT_FAIL();
+        printf("%s\n", FAIL);
 }
 
-/* Set up the test suite environment */
-void utest_begin(utest_storage utest)
+/* Set up a test suite */
+void utest_begin(UTEST_DATA utest, char const *name)
 {
-    test_ignored = FALSE;
+    if(name) 
+        printf("%s\n", name);
     utest.number = 0;
     utest.failed = 0;
     utest.ignored = 0;
+    utest.status = TEST_FAIL;
 }
 
-/* End the test by printing the stats of the test suite */
-void utest_end(utest_storage utest)
+/* End a test suite and print the result */
+void utest_end(UTEST_DATA utest)
 {
     putchar('\n');
     printf("-------------------------\n");
@@ -90,7 +92,7 @@ void utest_end(utest_storage utest)
     if (utest.failed == 0)
         printf("%s\n", OK);
     else if (utest.number == utest.ignored)
-        printf("IGNORED\n");   
+        printf("%s\n", IGNORE);
     else
         printf("%s\n", FAIL);
 }
