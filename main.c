@@ -4,7 +4,7 @@
  * Author       : Stb47 (contact@cbgr.anonaddy.com)
  * -----
  * Created Date : 08.07.2021, 14:54:41
- * Last Modified: 12.07.2021, 22:16:28
+ * Last Modified: 12.07.2021, 23:28:13
  */
 
 #include "src/utest.h"
@@ -41,8 +41,15 @@ int main(void)
     ASSERT(i > 10);
     ASSERT_MSG(i > 10, "C'est le message!");
 
-    char *ptr = str;
+    char *ptr = malloc(sizeof(char));
+    if(!ptr)
+        printf("malloc fail\n");
     ASSERT_PTR_NULL(ptr);
+    
+    char *ptr2 = str;
+    if(!ptr2)
+        printf("Not NULL!\n");
+    ASSERT_PTR_NULL(ptr2);
     
     return 0;
 }

@@ -4,7 +4,7 @@
  * Author       : Stb47 (contact@cbgr.anonaddy.com)
  * -----
  * Created Date : 08.07.2021, 16:05:47
- * Last Modified: 12.07.2021, 20:39:36
+ * Last Modified: 12.07.2021, 23:16:16
  */
 
 #include "utest.h"
@@ -69,9 +69,9 @@ int utest_strcmp(char const *actual, char const *expected)
  *    Function test tools 
  ****************************/
 
-int utest_cleanup_ptr(void *ptr)
+void utest_cleanup_ptr(void *ptr)
 {
     ptr = NULL;
     free(ptr);
-    return 1;
+    return ;
 }
