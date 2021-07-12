@@ -1,7 +1,7 @@
 
 NAME	= UTest 
 
-SRC		= main.c
+SRC		= main.c src/utest.c
 OBJ		= ${SRC;.c=.o}
  
 BUILD	= build/
