@@ -4,7 +4,7 @@
  * Author       : Stb47 (contact@cbgr.anonaddy.com)
  * -----
  * Created Date : 08.07.2021, 14:54:41
- * Last Modified: 12.07.2021, 23:28:13
+ * Last Modified: 13.07.2021, 11:53:59
  */
 
 #include "src/utest.h"
@@ -26,7 +26,7 @@ int main(void)
 
     RUN_TEST(STR_S(str, expected, "Comparaison string"), IGNORE_TEST());
     RUN_TEST(STR_S(str_fail, expected, "Comparaison string"));
-
+/*
     RUN_TEST(INT_S(i, 5, "name of test"));
     RUN_TEST(INT_S(i, j, "name of test"));
 
@@ -35,21 +35,14 @@ int main(void)
 
     RUN_TEST(ASSERT_S(func_0() == 1, "test name"));
     RUN_TEST(ASSERT_S(func_0() == 0, "test name"));
-
+*/
     UTEST_END();
     putchar('\n');
     ASSERT(i > 10);
     ASSERT_MSG(i > 10, "C'est le message!");
 
     char *ptr = malloc(sizeof(char));
-    if(!ptr)
-        printf("malloc fail\n");
-    ASSERT_PTR_NULL(ptr);
-    
-    char *ptr2 = str;
-    if(!ptr2)
-        printf("Not NULL!\n");
-    ASSERT_PTR_NULL(ptr2);
+    ASSERT_PTR_NULL(ptr, "malloc !");
     
     return 0;
 }

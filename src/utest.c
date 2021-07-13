@@ -4,7 +4,7 @@
  * Author       : Stb47 (contact@cbgr.anonaddy.com)
  * -----
  * Created Date : 08.07.2021, 16:05:47
- * Last Modified: 12.07.2021, 23:16:16
+ * Last Modified: 13.07.2021, 11:39:13
  */
 
 #include "utest.h"
@@ -14,15 +14,15 @@
  ****************************/
 
 /* Print test log result */
-void utest_print_s(char const *file, int line, char const *name)
+void utest_print_s(char const *file, int line, char const *actual, char const *expected, char const *name)
 {
     fprintf(stderr, "./%s:%d: %s: ", file , line, name);
     if (utest.status == TEST_IGNORE)
-        printf("%s\n", IGNORE);
+        fprintf(stderr, "%s\n", IGNORE);
     else if (utest.status == TEST_PASS)
-        printf("%s\n", PASS);
-    else
-        printf("%s\n", FAIL);
+        fprintf(stderr, "%s\n", PASS);
+    else 
+        fprintf(stderr, "%s Expected '%s' was '%s'\n", FAIL, expected, actual);
 }
 
 void utest_begin(UTEST_DATA utest, char const *name)
