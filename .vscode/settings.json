@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "*.rsn": "rust",
-        "typeinfo": "c"
-    }
-}

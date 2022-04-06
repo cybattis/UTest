@@ -1,45 +1,71 @@
 
-NAME	= UTest 
+NAME		= UTest
 
-SRC		= main.c src/utest.c
-OBJ		= ${SRC;.c=.o}
- 
-BUILD	= build/
+# Config
+# ****************************************************************************
 
-CC		= gcc
-RM		= rm -f
+SHELL 		=	/bin/bash
+CC 			=	gcc
+CFLAGS		=	-Wall -Wextra -MD $(INCLUDE)
 
-LIBRARY	=
+INCLUDE		=	-I utest
 
-INCLUDE = src/utest.h
+# Source files
+# ****************************************************************************
 
-CFLAGS	= -Wextra -Werror ${INCLUDE}
+TEST_DIR	= tests
+TEST_SRCS	= main.c
 
-${NAME}:	${OBJ}
-			@${CC} -o ${BUILD}${NAME} ${CFLAGS} ${SRC} ${LIBRARY}
-			@./${BUILD}${NAME}
+$(OBJSDIR)/%.o:	$(TEST_SRCS)/%.c | $(OBJSDIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@printf "$(_GREEN)█$(_END)"
 
-all:		${NAME}
+all:		header $(NAME)
 
-debug:		${OBJ}
-			@${CC} -g -o ${BUILD}${NAME} ${CFLAGS} ${SRC}
+$(NAME):	$(OBJS)
+	@printf "$(_BLUE)\nTests compiled\n$(_END)"
+	@$(CC) -o $(BUILD)$(NAME) $(CFLAGS) $(TEST_SRCS)
+	@printf "$(_YELLOW)Launching tests...$(_END)\n"
+	@./$(NAME)
+	@rm -f $(NAME)
 
-dry-run:
-			@${CC} -o ${BUILD}${NAME} ${SRC}
-			@./${BUILD}${NAME}
+clean:		header
+	@printf "$(_YELLOW)Removing object files...$(_END)\n"
+	@$(RM) $(OBJSDIR)
 
-clean:		
-			@${RM} ${OBJ}
-
-fclean:		clean
-			@${RM} ${NAME}
+fclean:		header
+	@printf "$(_YELLOW)Removing object and binary file...$(_END)\n"
+	@$(RM) $(OBJSDIR)
+	@$(RM) $(NAME)
 
 re:			fclean all
 
-run:		re
-			@./${BUILD}${NAME}
+$(OBJSDIR):
+	@mkdir -p $(OBJSDIR)
 
-test:		
-			@${CC} 
+.PHONY: all clean fclean re debug libft test run-test
 
-.PHONY 	=	all clean fclean re src run test dry-run
+# Misc
+# =====================
+
+print-%:	; @echo $* = $($*)
+
+header:
+	@printf "\n"
+	@printf "$(_YELLOW)$(_END)\n"
+	@printf "\n"
+
+# Colors
+# ****************************************************************************
+
+_GREY		=	\033[30m
+_RED		=	\033[31m
+_GREEN		=	\033[32m
+_YELLOW		=	\033[33m
+_BLUE		=	\033[34m
+_PURPLE		=	\033[35m
+_CYAN		=	\033[36m
+_WHITE		=	\033[37m
+_END		=	\033[0m
+
+# ****************************************************************************
