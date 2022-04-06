@@ -4,10 +4,10 @@
  * Author       : Stb47 (contact@cbgr.anonaddy.com)
  * -----
  * Created Date : 08.07.2021, 14:54:41
- * Last Modified: 13.07.2021, 11:53:59
+ * Last Modified: 13.07.2021, 18:25:23
  */
 
-#include "src/utest.h"
+#include "utest.h"
 
 int main(void)
 {
@@ -15,8 +15,8 @@ int main(void)
     char str[] = "le test";
     char str_fail[] = "pas bon";
     char expected[] = "le test";
-    
-    
+
+
     int func_0()
     {
         return 0;
@@ -43,6 +43,6 @@ int main(void)
 
     char *ptr = malloc(sizeof(char));
     ASSERT_PTR_NULL(ptr, "malloc !");
-    
+
     return 0;
 }
