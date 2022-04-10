@@ -1,48 +1,45 @@
-/*
- * File         : main.c
- * Project      : UTest
- * Author       : Stb47 (contact@cbgr.anonaddy.com)
- * -----
- * Created Date : 08.07.2021, 14:54:41
- * Last Modified: 13.07.2021, 18:25:23
- */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
+/*   Updated: 2022/04/10 22:10:19 by cybattis         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "utest.h"
+#include "../utest/utest.h"
+
+int test_func_ok(void)
+{
+	return (0);
+}
+
+int test_func_ko(void)
+{
+	return (1);
+}
+
+int test_func_timeout(void)
+{
+	sleep(3);
+	return (1);
+}
 
 int main(void)
 {
-    int i = 5, j = 10;
-    char str[] = "le test";
-    char str_fail[] = "pas bon";
-    char expected[] = "le test";
+	UTEST_BEGIN("Suite #1 - Test the tests");
+	RUN_TEST("Test ok", test_func_ok);
+	RUN_TEST("Test ko", test_func_ko);
+	RUN_TEST("Test timeout", test_func_timeout);
+	UTEST_END();
 
+	UTEST_BEGIN("Suite #2 - ReTest the tests");
+	RUN_TEST("Test ok", test_func_ok);
+	RUN_TEST("Test ko", test_func_ko);
+	UTEST_END();
 
-    int func_0()
-    {
-        return 0;
-    }
-
-    UTEST_BEGIN("Suite #1 - Test the tests\n");
-
-    RUN_TEST(STR_S(str, expected, "Comparaison string"), IGNORE_TEST());
-    RUN_TEST(STR_S(str_fail, expected, "Comparaison string"));
-/*
-    RUN_TEST(INT_S(i, 5, "name of test"));
-    RUN_TEST(INT_S(i, j, "name of test"));
-
-    RUN_TEST(ASSERT_S(i < 10, "i below 10"));
-    RUN_TEST(ASSERT_S(i > 10, "i more than 10"), IGNORE_TEST());
-
-    RUN_TEST(ASSERT_S(func_0() == 1, "test name"));
-    RUN_TEST(ASSERT_S(func_0() == 0, "test name"));
-*/
-    UTEST_END();
-    putchar('\n');
-    ASSERT(i > 10);
-    ASSERT_MSG(i > 10, "C'est le message!");
-
-    char *ptr = malloc(sizeof(char));
-    ASSERT_PTR_NULL(ptr, "malloc !");
-
-    return 0;
+	return (0);
 }

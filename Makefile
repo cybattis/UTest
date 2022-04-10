@@ -1,39 +1,44 @@
 
-NAME		= UTest
+NAME		= UTester
 
 # Config
 # ****************************************************************************
 
-SHELL 		=	/bin/bash
-CC 			=	gcc
+SHELL		=	/bin/bash
+CC			=	gcc
 CFLAGS		=	-Wall -Wextra -MD $(INCLUDE)
 
+RM			=	rm -rf
+
 INCLUDE		=	-I utest
+OBJSDIR		=	obj
 
 # Source files
 # ****************************************************************************
 
-TEST_DIR	= tests
-TEST_SRCS	= main.c
+TEST_DIR	=	tests
+SRCS_FILES	=	main.c
+TEST_SRCS	=	$(addprefix $(TEST_DIR)/, $(SRCS_FILES))
 
-$(OBJSDIR)/%.o:	$(TEST_SRCS)/%.c | $(OBJSDIR)
+OBJS		=	$(addprefix $(OBJSDIR)/, $(SRCS_FILES:.c=.o))
+
+$(OBJSDIR)/%.o:	$(TEST_DIR)/%.c | $(OBJSDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@printf "$(_GREEN)█$(_END)"
 
-all:		header $(NAME)
+all:	$(NAME)
 
 $(NAME):	$(OBJS)
 	@printf "$(_BLUE)\nTests compiled\n$(_END)"
-	@$(CC) -o $(BUILD)$(NAME) $(CFLAGS) $(TEST_SRCS)
+	@$(CC) -o $(NAME) $(CFLAGS) $(OBJS)
 	@printf "$(_YELLOW)Launching tests...$(_END)\n"
 	@./$(NAME)
-	@rm -f $(NAME)
 
-clean:		header
+clean:
 	@printf "$(_YELLOW)Removing object files...$(_END)\n"
 	@$(RM) $(OBJSDIR)
 
-fclean:		header
+fclean:
 	@printf "$(_YELLOW)Removing object and binary file...$(_END)\n"
 	@$(RM) $(OBJSDIR)
 	@$(RM) $(NAME)
