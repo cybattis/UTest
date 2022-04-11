@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utest.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cybattis <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/11 12:22:37 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/11 14:44:41 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,53 +22,49 @@
 #include <strings.h>
 #include <stdarg.h>
 
-/* macros test suite */
+/* Settings */
 /* *************************** */
 
-#define UTEST_BEGIN(suite_name)					utest_begin(suite_name, STDERR_FILENO)
-#define RUN_TEST(test_name, func, ...)			run_test(test_name, func, ##__VA_ARGS__)
-#define UTEST_END()								utest_end(STDERR_FILENO)
+#define UT_OUTPUT	STDERR_FILENO
+#define UT_TIMEOUT	2
 
-#define TIMEOUT 2
-
-/* macros assertion */
+/* Macros test suite */
 /* *************************** */
 
-#define ASSERT(actual, expected)
-#define ASSERT_MSG(actual, expected, message)
+#define UTEST_BEGIN(suite_name)			utest_begin(suite_name, UT_OUTPUT)
+#define RUN_TEST(test_name, func, ...)	run_test(test_name, func, ##__VA_ARGS__)
+#define UTEST_END()						utest_end(UT_OUTPUT)
 
-/* macros utils */
+/* Macros utils */
 /* *************************** */
 
-#define OK			"\033[32m[OK]\n\033[00m"
-#define KO			"\033[31m[KO]ERROR\n\033[00m"
-#define IGNORE		"\033[34m[IGNORE]\n\033[00m"
+#define UT_IGNORE	-1
+#define UT_FAIL		0
+#define UT_PASS		1
+#define UT_SIG		2
 
-#define TEST_IGNORE	-1
-#define TEST_FAIL	0
-#define TEST_PASS	1
-#define TEST_SIG	2
+/* Function definition */
+/* *************************** */
 
 typedef struct s_utest_data
 {
-	int	test_count;
-	int	test_passed;
-	int	test_failed;
-	int	test_ignored;
-//	int	log_file;
+	int	count;
+	int	passed;
+	int	failed;
+	int	ignored;
 }	t_utest_data;
 
-t_utest_data	utest_data;
+t_utest_data	utest_suite;
 
 static void	utest_begin(char *suite_name, int fd)
 {
-	bzero(&utest_data, sizeof(t_utest_data));
+	bzero(&utest_suite, sizeof(t_utest_data));
 	dprintf(fd, "\n%s\n", suite_name);
 }
 
 static void	utest_end(int fd)
 {
-	dprintf(fd, "%d/%d tests pass\n", utest_data.test_passed, utest_data.test_count);
+	dprintf(fd, "%d/%d tests pass\n", utest_suite.passed, utest_suite.count);
 }
 
 static void	print_test_status(int status, char *test_name, int fd);
@@ -84,9 +80,9 @@ static int	run_test(char *test_name, int (*f)(void), ...)
 	va_start(args, f);
 	flags = va_arg(args, int);
 	va_end(args);
-	if (flags == TEST_IGNORE)
+	if (flags == UT_IGNORE)
 	{
-		print_test_status(TEST_IGNORE, test_name, STDERR_FILENO);
+		print_test_status(UT_IGNORE, test_name, STDERR_FILENO);
 		return (-1);
 	}
 	pid = fork();
@@ -99,17 +95,17 @@ static int	run_test(char *test_name, int (*f)(void), ...)
 			exit(-1);
 		dup2(fd, 1);
 		dup2(fd, 2);
-		alarm(TIMEOUT);
+		alarm(UT_TIMEOUT);
 		return_value = f();
 		close(fd);
 		exit(return_value);
 	}
-	utest_data.test_count++;
+	utest_suite.count++;
 	wait(&status);
 	if (WIFEXITED(status))
 	{
 		if (WEXITSTATUS(status) == 0)
-			utest_data.test_passed++;
+			utest_suite.passed++;
 		print_test_status(WEXITSTATUS(status), test_name, STDERR_FILENO);
 	}
 	else if (WIFSIGNALED(status))
@@ -120,9 +116,9 @@ static int	run_test(char *test_name, int (*f)(void), ...)
 
 static void	print_test_status(int status, char *test_name, int fd)
 {
-	dprintf(STDERR_FILENO, "%d - %s: ", utest_data.test_count, test_name);
+	dprintf(STDERR_FILENO, "%d - %s: ", utest_suite.count, test_name);
 	if (status == 0)
-		dprintf(fd, "\033[32m[OK]\n\033[00m");
+		dprintf(fd, "\033[32m[OK]\n\033[0m");
 	else if (status == 1)
 		dprintf(fd, "\033[31m[KO]\n\033[0m");
 	else if (status == SIGSEGV)
