@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/10 22:23:24 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/11 12:22:37 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,13 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <strings.h>
+#include <stdarg.h>
 
 /* macros test suite */
 /* *************************** */
 
 #define UTEST_BEGIN(suite_name)					utest_begin(suite_name, STDERR_FILENO)
-#define RUN_TEST(test_name, func)				run_test(test_name, func)
+#define RUN_TEST(test_name, func, ...)			run_test(test_name, func, ##__VA_ARGS__)
 #define UTEST_END()								utest_end(STDERR_FILENO)
 
 #define TIMEOUT 2
@@ -39,25 +40,14 @@
 /* macros utils */
 /* *************************** */
 
-#define PRINT_STDERR(message)					dprintf(STDERR_FILENO, "./%s:%d: %s %s\n", __FILE__, __LINE__, ERROR, message)
-#define PRINT_LOG(message)						dprintf(fd, "./%s:%d: %s %s\n", __FILE__, __LINE__, ERROR, message)
-
 #define OK			"\033[32m[OK]\n\033[00m"
 #define KO			"\033[31m[KO]ERROR\n\033[00m"
 #define IGNORE		"\033[34m[IGNORE]\n\033[00m"
 
-#define P_SIGSEGV	"\033[33m[SIGSEGV]\n\033[0m"
-#define P_SIGBUS	"\033[33m[SIGBUS]\n\033[0m"
-#define P_SIGABRT	"\033[33m[SIGABRT]\n\033[0m"
-#define P_SIGFPE	"\033[33m[SIGFPE]\n\033[0m"
-#define P_SIGPIPE	"\033[33m[SIGPIPE]\n\033[0m"
-#define P_SIGILL	"\033[33m[SIGILL]\n\033[0m"
-#define P_TIMEOUT	"\033[1;30m[TIMEOUT]\n\033[0m"
-
+#define TEST_IGNORE	-1
 #define TEST_FAIL	0
 #define TEST_PASS	1
 #define TEST_SIG	2
-#define TEST_IGNORE	3
 
 typedef struct s_utest_data
 {
@@ -85,10 +75,20 @@ static void	print_test_status(int status, char *test_name, int fd);
 
 static int	run_test(char *test_name, int (*f)(void), ...)
 {
+	int 	flags;
+	va_list args;
 	pid_t	pid;
 	int		return_value;
 	int		status;
 
+	va_start(args, f);
+	flags = va_arg(args, int);
+	va_end(args);
+	if (flags == TEST_IGNORE)
+	{
+		print_test_status(TEST_IGNORE, test_name, STDERR_FILENO);
+		return (-1);
+	}
 	pid = fork();
 	if (pid == -1)
 		return (-1);
@@ -123,6 +123,8 @@ static void	print_test_status(int status, char *test_name, int fd)
 	dprintf(STDERR_FILENO, "%d - %s: ", utest_data.test_count, test_name);
 	if (status == 0)
 		dprintf(fd, "\033[32m[OK]\n\033[00m");
+	else if (status == 1)
+		dprintf(fd, "\033[31m[KO]\n\033[0m");
 	else if (status == SIGSEGV)
 		dprintf(fd, "\033[33m[SIGSEGV]\n\033[0m");
 	else if (status == SIGBUS)
@@ -138,7 +140,7 @@ static void	print_test_status(int status, char *test_name, int fd)
 	else if (status == SIGALRM)
 		dprintf(fd, "\033[1;30m[TIMEOUT]\n\033[0m");
 	else
-		dprintf(fd, "\033[31m[KO]\n\033[0m");
+		dprintf(fd, "\033[34m[IGNORE]\n\033[0m");
 }
 
 #endif /* UTEST_H */

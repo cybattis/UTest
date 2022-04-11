@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/11 11:10:23 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/11 12:19:31 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int main(void)
 	UTEST_BEGIN("Suite #1 - Test the tests");
 	RUN_TEST("Test ok", test_func_ok);
 	RUN_TEST("Test ko", test_func_ko);
+	RUN_TEST("Test ko", test_func_ko, TEST_IGNORE);
 	RUN_TEST("Test sigsegv", test_sigsegv);
 	RUN_TEST("Test sigabort", test_sigabort);
 	RUN_TEST("Test sigfpe", test_sigfpe);
