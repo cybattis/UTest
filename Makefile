@@ -26,12 +26,14 @@ $(OBJSDIR)/%.o:	$(TEST_DIR)/%.c | $(OBJSDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@printf "$(_GREEN)█$(_END)"
 
-all:	$(NAME)
+all:	$(NAME) run
 
 $(NAME):	$(OBJS)
 	@printf "$(_BLUE)\nTests compiled\n$(_END)"
 	@$(CC) -o $(NAME) $(CFLAGS) $(OBJS)
 	@printf "$(_YELLOW)Launching tests...$(_END)\n"
+
+run:
 	@./$(NAME)
 
 clean:
@@ -48,7 +50,7 @@ re:			fclean all
 $(OBJSDIR):
 	@mkdir -p $(OBJSDIR)
 
-.PHONY: all clean fclean re debug libft test run-test
+.PHONY: all clean fclean re debug run
 
 # Misc
 # =====================

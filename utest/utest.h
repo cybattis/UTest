@@ -54,7 +54,6 @@
 #define P_SIGILL	"\033[33m[SIGILL]\n\033[0m"
 #define P_TIMEOUT	"\033[1;30m[TIMEOUT]\n\033[0m"
 
-
 #define TEST_FAIL	0
 #define TEST_PASS	1
 #define TEST_SIG	2
@@ -66,6 +65,7 @@ typedef struct s_utest_data
 	int	test_passed;
 	int	test_failed;
 	int	test_ignored;
+//	int	log_file;
 }	t_utest_data;
 
 t_utest_data	utest_data;
@@ -81,7 +81,7 @@ static void	utest_end(int fd)
 	dprintf(fd, "%d/%d tests pass\n", utest_data.test_passed, utest_data.test_count);
 }
 
-static void	print_test_status(int status, int fd);
+static void	print_test_status(int status, char *test_name, int fd);
 
 static int	run_test(char *test_name, int (*f)(void), ...)
 {
@@ -106,21 +106,21 @@ static int	run_test(char *test_name, int (*f)(void), ...)
 	}
 	utest_data.test_count++;
 	wait(&status);
-	dprintf(STDERR_FILENO, "%d - %s: ", utest_data.test_count, test_name);
 	if (WIFEXITED(status))
 	{
 		if (WEXITSTATUS(status) == 0)
 			utest_data.test_passed++;
-		print_test_status(WEXITSTATUS(status), STDERR_FILENO);
+		print_test_status(WEXITSTATUS(status), test_name, STDERR_FILENO);
 	}
 	else if (WIFSIGNALED(status))
-		print_test_status(WTERMSIG(status), STDERR_FILENO);
+		print_test_status(WTERMSIG(status), test_name, STDERR_FILENO);
 	unlink("tmp");
 	return (0);
 }
 
-static void	print_test_status(int status, int fd)
+static void	print_test_status(int status, char *test_name, int fd)
 {
+	dprintf(STDERR_FILENO, "%d - %s: ", utest_data.test_count, test_name);
 	if (status == 0)
 		dprintf(fd, "\033[32m[OK]\n\033[00m");
 	else if (status == SIGSEGV)
