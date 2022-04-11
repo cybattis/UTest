@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   01_ft_atoi_basic_test.c                            :+:      :+:    :+:   */
+/*   ulog_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cybattis <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/09 10:59:38 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/02 17:18:53 by cybattis         ###   ########.fr       */
+/*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
+/*   Updated: 2022/04/11 17:54:07 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../libft/libft.h"
+#include "ulog.h"
+#include <string.h>
 
-int	ft_atoi_basic_test(void)
+int main(void)
 {
-	if (ft_atoi("42") == 42)
-		return (0);
-	return (-1);
+	ULOG_INFO("Test Info log");
+	ULOG_ERROR("Test Error log");
+	ULOG_WARNING("Test Warning log");
+	ULOG_UPDATE("Test Update log");
+	ULOG_CRASH("Test Crash log");
+	return (0);
 }

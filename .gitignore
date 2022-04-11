@@ -2,6 +2,7 @@
 *.d
 obj
 Utester
+Uloger
 
 # Object files
 *.o

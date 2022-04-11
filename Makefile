@@ -1,5 +1,6 @@
 
-NAME		= UTester
+UTEST		= utester
+ULOG		= uloger
 
 # Config
 # ****************************************************************************
@@ -17,24 +18,35 @@ OBJSDIR		=	obj
 # ****************************************************************************
 
 TEST_DIR	=	tests
-SRCS_FILES	=	main.c
-TEST_SRCS	=	$(addprefix $(TEST_DIR)/, $(SRCS_FILES))
+UTEST_SRCS	=	tests/utest_main.c
+ULOG_SRCS	=	tests/ulog_main.c
 
-OBJS		=	$(addprefix $(OBJSDIR)/, $(SRCS_FILES:.c=.o))
+OBJS_UTEST	=	$(addprefix $(OBJSDIR)/, $(notdir $(UTEST_SRCS:.c=.o)))
+OBJS_ULOG	=	$(addprefix $(OBJSDIR)/, $(notdir $(ULOG_SRCS:.c=.o)))
 
 $(OBJSDIR)/%.o:	$(TEST_DIR)/%.c | $(OBJSDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@printf "$(_GREEN)█$(_END)"
 
-all:	$(NAME) run
+all:	$(UTEST) $(ULOG) run
 
-$(NAME):	$(OBJS)
+$(UTEST):	$(OBJS_UTEST)
 	@printf "$(_BLUE)\nTests compiled\n$(_END)"
-	@$(CC) -o $(NAME) $(CFLAGS) $(OBJS)
+	@$(CC) -o $(UTEST) $(CFLAGS) $(OBJS_UTEST)
 	@printf "$(_YELLOW)Launching tests...$(_END)\n"
 
-run:
-	@./$(NAME)
+$(ULOG):	$(OBJS_ULOG)
+	@printf "$(_BLUE)\nTests compiled\n$(_END)"
+	@$(CC) -o $(ULOG) $(CFLAGS) $(OBJS_ULOG)
+	@printf "$(_YELLOW)Launching tests...$(_END)\n"
+
+run: run-utest run-ulog
+
+run-utest:
+	@./$(UTEST)
+
+run-ulog:
+	@./$(ULOG)
 
 clean:
 	@printf "$(_YELLOW)Removing object files...$(_END)\n"
@@ -43,7 +55,7 @@ clean:
 fclean:
 	@printf "$(_YELLOW)Removing object and binary file...$(_END)\n"
 	@$(RM) $(OBJSDIR)
-	@$(RM) $(NAME)
+	@$(RM) $(UTEST) $(ULOG)
 
 re:			fclean all
 

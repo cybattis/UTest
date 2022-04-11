@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "utest.h"
-#include "ulog.h"
 #include <string.h>
 
 int utest_func_ok(void)
@@ -70,17 +69,8 @@ int	utest_sigill(void)
 	return (0);
 }
 
-int	utest_ulog(void)
-{
-
-	return (0);
-}
-
 int main(void)
 {
-	UTEST_BEGIN("Suite #0 - Test ULOG");
-	ULOG_INFO("Ceci est un info");
-
 	UTEST_BEGIN("Suite #1 - Test the tests");
 	RUN_TEST("Test ok", utest_func_ok);
 	RUN_TEST("Test ko", utest_func_ko);
