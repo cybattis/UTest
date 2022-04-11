@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat_test.h                                  :+:      :+:    :+:   */
+/*   ulog.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cybattis <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/09 10:59:38 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/03 14:34:46 by cybattis         ###   ########.fr       */
+/*   Created: 2022/04/11 16:49:17 by cybattis          #+#    #+#             */
+/*   Updated: 2022/04/11 16:50:32 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_STRLCAT_TEST_H
-# define FT_STRLCAT_TEST_H
+#ifndef ULOG_H
+#define ULOG_H
 
-int	ft_strlcat_null_test(void);
-int	ft_strlcat_null_test_2(void);
-int	ft_strlcat_null_test_3(void);
-int	ft_strlcat_basic_test(void);
-int	ft_strlcat_long_dst_test(void);
-int	ft_strlcat_long_src_test(void);
-int	ft_strlcat_size_test(void);
-int	ft_strlcat_size_test_2(void);
+#define ULOG_OUT	STDERR_FILENO
 
-#endif
+#define ULOG_INFO(msg)		dprintf(ULOG_OUT, "[INFO] %s\n", msg)
+
+#endif /* ULOG_H */

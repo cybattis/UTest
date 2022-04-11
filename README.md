@@ -12,7 +12,7 @@ Small - *Header-only* - unit test framework
 ## Macro settings
 
 ```c
-    UT_OUTPUT	STDERR_FILENO
+    UTEST_OUT	STDERR_FILENO
     UT_TIMEOUT	2
 ```
 

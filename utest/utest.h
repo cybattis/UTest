@@ -25,15 +25,15 @@
 /* Settings */
 /* *************************** */
 
-#define UT_OUTPUT	STDERR_FILENO
+#define UTEST_OUT	STDERR_FILENO
 #define UT_TIMEOUT	2
 
 /* Macros test suite */
 /* *************************** */
 
-#define UTEST_BEGIN(suite_name)			utest_begin(suite_name, UT_OUTPUT)
+#define UTEST_BEGIN(suite_name)			utest_begin(suite_name, UTEST_OUT)
 #define RUN_TEST(test_name, func, ...)	run_test(test_name, func, ##__VA_ARGS__)
-#define UTEST_END()						utest_end(UT_OUTPUT)
+#define UTEST_END()						utest_end(UTEST_OUT)
 
 /* Macros utils */
 /* *************************** */
