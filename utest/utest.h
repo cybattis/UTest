@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utest.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cybattis <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/11 14:44:41 by cybattis         ###   ########.fr       */
+/*   Created: 2022/04/12 11:28:17 by cybattis          #+#    #+#             */
+/*   Updated: 2022/04/12 11:28:17 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,32 @@
 #include <strings.h>
 #include <stdarg.h>
 
-/* Settings */
+
+/* *************************** */
+/*           Settings          */
 /* *************************** */
 
 #define UTEST_OUT	STDERR_FILENO
 #define UT_TIMEOUT	2
 
 /* Macros test suite */
-/* *************************** */
+/* ***************** */
 
 #define UTEST_BEGIN(suite_name)			utest_begin(suite_name, UTEST_OUT)
 #define RUN_TEST(test_name, func, ...)	run_test(test_name, func, ##__VA_ARGS__)
 #define UTEST_END()						utest_end(UTEST_OUT)
 
 /* Macros utils */
-/* *************************** */
+/* ************ */
 
 #define UT_IGNORE	-1
 #define UT_FAIL		0
 #define UT_PASS		1
 #define UT_SIG		2
 
-/* Function definition */
+
+/* *************************** */
+/*      Global definition      */
 /* *************************** */
 
 typedef struct s_utest_data
@@ -56,6 +60,13 @@ typedef struct s_utest_data
 
 t_utest_data	utest_suite;
 
+
+/* *************************** */
+/*     Function definition     */
+/* *************************** */
+
+static void	print_test_status(int status, char *test_name, int fd);
+
 static void	utest_begin(char *suite_name, int fd)
 {
 	bzero(&utest_suite, sizeof(t_utest_data));
@@ -66,8 +77,6 @@ static void	utest_end(int fd)
 {
 	dprintf(fd, "%d/%d tests pass\n", utest_suite.passed, utest_suite.count);
 }
-
-static void	print_test_status(int status, char *test_name, int fd);
 
 static int	run_test(char *test_name, int (*f)(void), ...)
 {

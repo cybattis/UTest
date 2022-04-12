@@ -24,28 +24,31 @@ ULOG_SRCS	=	tests/ulog_main.c
 OBJS_UTEST	=	$(addprefix $(OBJSDIR)/, $(notdir $(UTEST_SRCS:.c=.o)))
 OBJS_ULOG	=	$(addprefix $(OBJSDIR)/, $(notdir $(ULOG_SRCS:.c=.o)))
 
+DEPENDS		=	$(OBJS_UTEST:.o=.d)	\
+				$(OBJS_ULOG:.o=.d)
+
 $(OBJSDIR)/%.o:	$(TEST_DIR)/%.c | $(OBJSDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@printf "$(_GREEN)█$(_END)"
 
 all:	$(UTEST) $(ULOG) run
 
-$(UTEST):	$(OBJS_UTEST)
+$(UTEST):	$(OBJS_UTEST) | $(OBJSDIR)
 	@printf "$(_BLUE)\nTests compiled\n$(_END)"
 	@$(CC) -o $(UTEST) $(CFLAGS) $(OBJS_UTEST)
 	@printf "$(_YELLOW)Launching tests...$(_END)\n"
 
-$(ULOG):	$(OBJS_ULOG)
+$(ULOG):	$(OBJS_ULOG) | $(OBJSDIR)
 	@printf "$(_BLUE)\nTests compiled\n$(_END)"
 	@$(CC) -o $(ULOG) $(CFLAGS) $(OBJS_ULOG)
 	@printf "$(_YELLOW)Launching tests...$(_END)\n"
 
-run: run-utest run-ulog
+run: utest ulog
 
-run-utest:
+utest:	$(UTEST)
 	@./$(UTEST)
 
-run-ulog:
+ulog:	$(ULOG)
 	@./$(ULOG)
 
 clean:
@@ -63,6 +66,8 @@ $(OBJSDIR):
 	@mkdir -p $(OBJSDIR)
 
 .PHONY: all clean fclean re debug run
+
+-include $(DEPENDS)
 
 # Misc
 # =====================

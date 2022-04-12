@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ulog_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cybattis <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/11 17:54:07 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/12 12:19:13 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,14 @@
 
 int main(void)
 {
-	ULOG_INFO("Test Info log");
+	ULOG_FATAL("Test Fatal log");
 	ULOG_ERROR("Test Error log");
 	ULOG_WARNING("Test Warning log");
-	ULOG_UPDATE("Test Update log");
-	ULOG_CRASH("Test Crash log");
+	for (int i = 0; i < 10; ++i)
+	{
+		usleep(100000);
+		ULOG_INFO("Test Info log");
+	}
+	ULOG_DEBUG("Test Debug log");
 	return (0);
 }
