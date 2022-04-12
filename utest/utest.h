@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utest.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cybattis <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:17 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/12 18:11:09 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/13 00:10:10 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@
 #define UTEST_PRINT_ASSERT_STR(level, actual, expected)  \
 		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: Expected: \"%s\" --> actual: \"%s\"\n", level, __FUNCTION__ , __FILE__, __LINE__, expected, actual)
 
-#define UTEST_PRINT_ASSERT_INT(level, actual, expected)  \
-		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: Expected: \"%d\" --> actual: \"%d\"\n", level, __FUNCTION__ , __FILE__, __LINE__, expected, actual)
+#define UTEST_PRINT_ASSERT_INT(level, actual, expected, msg)  \
+		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: "msg"\n", level, __FUNCTION__ , __FILE__, __LINE__, expected, actual)
 
 #define UTEST_PRINT_ASSERT_PTR(level, var, expected)  \
 		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: Pointer %s %s\n", level, __FUNCTION__ , __FILE__, __LINE__, get_name(var), expected)
@@ -67,15 +67,29 @@
 			UTEST_PRINT_ASSERT_STR(UT_ERROR, actual, expected)
 
 
+#define UTEST_ASSERT_INT_EQUAL(actual, expected)			\
+		if (actual != expected)								\
+			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected, "Expected: %d --> actual: %d")
 
-#define UTEST_ASSERT_INT_EQUAL(actual, expected)		\
-		if (actual != expected)							\
-			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected)
+#define UTEST_ASSERT_INT_NOT_EQUAL(actual, expected)		\
+		if (actual == expected)								\
+			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected, "Expected: %d --> actual: %d")
 
-#define UTEST_ASSERT_INT_NOT_EQUAL(actual, expected)	\
-		if (actual == expected)							\
-			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected)
+#define UTEST_ASSERT_INT_GREATER(actual, expected)			\
+		if (actual < expected)								\
+			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected, "Value %d is not greater than %d")
 
+#define UTEST_ASSERT_INT_GREATER_EQUAL(actual, expected)	\
+		if (actual <= expected)								\
+			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected, "Value %d is not greater or equal to %d")
+
+#define UTEST_ASSERT_INT_LESSER(actual, expected)			\
+		if (actual > expected)								\
+			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected, "Value %d is not lesser to %d")
+
+#define UTEST_ASSERT_INT_LESSER_EQUAL(actual, expected)		\
+		if (actual >= expected)								\
+			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected, "Value %d is not lesser or equal to %d")
 
 
 #define UTEST_ASSERT_PTR_NULL(actual)		\
@@ -133,6 +147,7 @@ static int	run_test(char *test_name, int (*f)(void), ...)
 	int		return_value;
 	int		status;
 
+	utest_suite.count++;
 	va_start(args, f);
 	flags = va_arg(args, int);
 	va_end(args);
@@ -157,7 +172,6 @@ static int	run_test(char *test_name, int (*f)(void), ...)
 		close(fd);
 		exit(return_value);
 	}
-	utest_suite.count++;
 	wait(&status);
 	if (WIFEXITED(status))
 	{
