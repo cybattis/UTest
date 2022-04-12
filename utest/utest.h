@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:17 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/13 00:10:10 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/13 00:30:50 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,23 @@
 #define UT_FATAL		"[\033[31mFATAL\033[0m]"
 
 #define get_name(var)	#var
+#define UTEST_DPRINTF(level)	\
+		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: ", level, __FUNCTION__ , __FILE__, __LINE__);
 
 /* Macros utils */
 /* ************ */
 
-#define UTEST_PRINT_ASSERT_STR(level, actual, expected)  \
-		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: Expected: \"%s\" --> actual: \"%s\"\n", level, __FUNCTION__ , __FILE__, __LINE__, expected, actual)
+#define UTEST_PRINT_ASSERT_STR(level, actual, expected)			\
+		UTEST_DPRINTF(level); dprintf(UTEST_OUT, "Expected: \"%s\" --> actual: \"%s\"\n", expected, actual)
 
-#define UTEST_PRINT_ASSERT_INT(level, actual, expected, msg)  \
-		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: "msg"\n", level, __FUNCTION__ , __FILE__, __LINE__, expected, actual)
+#define UTEST_PRINT_ASSERT_INT(level, actual, expected, msg)	\
+		UTEST_DPRINTF(level); dprintf(UTEST_OUT, msg"\n", expected, actual)
 
-#define UTEST_PRINT_ASSERT_PTR(level, var, expected)  \
-		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: Pointer %s %s\n", level, __FUNCTION__ , __FILE__, __LINE__, get_name(var), expected)
+#define UTEST_PRINT_ASSERT_BOOL(level, msg)				\
+		UTEST_DPRINTF(level); dprintf(UTEST_OUT, msg"\n")
+
+#define UTEST_PRINT_ASSERT_PTR(level, var, expected)			\
+		UTEST_DPRINTF(level); dprintf(UTEST_OUT, "Pointer %s %s\n", get_name(var), expected)
 
 /* *************************** */
 /*        Suite & assert       */
@@ -65,6 +70,15 @@
 #define UTEST_ASSERT_STR_NOT_EQUAL(actual, expected)	\
 		if (!strcmp(actual, expected))					\
 			UTEST_PRINT_ASSERT_STR(UT_ERROR, actual, expected)
+
+
+#define UTEST_ASSERT_TRUE(value)		\
+		if (value)						\
+			UTEST_PRINT_ASSERT_BOOL(UT_ERROR, "Expected TRUE has FALSE")
+
+#define UTEST_ASSERT_FALSE(value)		\
+		if (!value)						\
+			UTEST_PRINT_ASSERT_BOOL(UT_ERROR, "Expected FALSE has TRUE")
 
 
 #define UTEST_ASSERT_INT_EQUAL(actual, expected)			\

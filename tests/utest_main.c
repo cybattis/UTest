@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utest_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cybattis <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/12 18:14:02 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/13 00:34:00 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ int main(void)
 	UTEST_ASSERT_INT_LESSER_EQUAL(10, 5);
 	UTEST_ASSERT_PTR_NULL(p1);
 	UTEST_ASSERT_PTR_NOT_NULL(p2);
+	UTEST_ASSERT_FALSE(0);
+	UTEST_ASSERT_TRUE(1);
 
 	UTEST_BEGIN("Suite #1 - Test the tests");
 	RUN_TEST("Test ok", utest_func_ok);
