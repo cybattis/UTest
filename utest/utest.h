@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utest.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cybattis <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:17 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/12 11:28:17 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/12 18:11:09 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,70 @@
 #include <strings.h>
 #include <stdarg.h>
 
-
 /* *************************** */
 /*           Settings          */
 /* *************************** */
 
-#define UTEST_OUT	STDERR_FILENO
-#define UT_TIMEOUT	2
+#define UTEST_OUT		STDERR_FILENO
+#define UT_TIMEOUT		2
 
-/* Macros test suite */
-/* ***************** */
+#define UT_ERROR		"[\033[31mERROR\033[0m]"
+#define UT_WARNING		"[\033[33mWARNING\033[0m]"
+#define UT_INFO			"[\033[32mINFO\033[0m]"
+#define UT_DEBUG		"[\033[34mDEBUG\033[0m]"
+#define UT_FATAL		"[\033[31mFATAL\033[0m]"
 
-#define UTEST_BEGIN(suite_name)			utest_begin(suite_name, UTEST_OUT)
-#define RUN_TEST(test_name, func, ...)	run_test(test_name, func, ##__VA_ARGS__)
-#define UTEST_END()						utest_end(UTEST_OUT)
+#define get_name(var)	#var
 
 /* Macros utils */
 /* ************ */
+
+#define UTEST_PRINT_ASSERT_STR(level, actual, expected)  \
+		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: Expected: \"%s\" --> actual: \"%s\"\n", level, __FUNCTION__ , __FILE__, __LINE__, expected, actual)
+
+#define UTEST_PRINT_ASSERT_INT(level, actual, expected)  \
+		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: Expected: \"%d\" --> actual: \"%d\"\n", level, __FUNCTION__ , __FILE__, __LINE__, expected, actual)
+
+#define UTEST_PRINT_ASSERT_PTR(level, var, expected)  \
+		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: Pointer %s %s\n", level, __FUNCTION__ , __FILE__, __LINE__, get_name(var), expected)
+
+/* *************************** */
+/*        Suite & assert       */
+/* *************************** */
+
+#define UTEST_BEGIN(suite_name)							utest_begin(suite_name, UTEST_OUT)
+#define RUN_TEST(test_name, func, ...)					run_test(test_name, func, ##__VA_ARGS__)
+#define UTEST_END()										utest_end(UTEST_OUT)
+
+
+#define UTEST_ASSERT_STR_EQUAL(actual, expected)		\
+		if (strcmp(actual, expected))					\
+			UTEST_PRINT_ASSERT_STR(UT_ERROR, actual, expected)
+
+#define UTEST_ASSERT_STR_NOT_EQUAL(actual, expected)	\
+		if (!strcmp(actual, expected))					\
+			UTEST_PRINT_ASSERT_STR(UT_ERROR, actual, expected)
+
+
+
+#define UTEST_ASSERT_INT_EQUAL(actual, expected)		\
+		if (actual != expected)							\
+			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected)
+
+#define UTEST_ASSERT_INT_NOT_EQUAL(actual, expected)	\
+		if (actual == expected)							\
+			UTEST_PRINT_ASSERT_INT(UT_ERROR, actual, expected)
+
+
+
+#define UTEST_ASSERT_PTR_NULL(actual)		\
+		if (actual)							\
+			UTEST_PRINT_ASSERT_PTR(UT_ERROR, actual, "has to be null")
+
+#define UTEST_ASSERT_PTR_NOT_NULL(actual)	\
+		if (!actual)						\
+			UTEST_PRINT_ASSERT_PTR(UT_ERROR, actual, "has to be not null")
+
 
 #define UT_IGNORE	-1
 #define UT_FAIL		0
@@ -91,6 +138,7 @@ static int	run_test(char *test_name, int (*f)(void), ...)
 	va_end(args);
 	if (flags == UT_IGNORE)
 	{
+
 		print_test_status(UT_IGNORE, test_name, STDERR_FILENO);
 		return (-1);
 	}

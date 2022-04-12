@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utest_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cybattis <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/11 17:02:11 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/12 18:14:02 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,19 @@ int	utest_sigill(void)
 
 int main(void)
 {
+	char	*s1 = "coucou";
+	char	*s2 = "nvjorwbvoow";
+	char	*s3 = "coucou";
+	char	*p1 = malloc(4);
+	char	*p2 = NULL;
+
+	UTEST_ASSERT_STR_EQUAL(s1, s2);
+	UTEST_ASSERT_STR_NOT_EQUAL(s1, s3);
+	UTEST_ASSERT_INT_EQUAL(10, 50);
+	UTEST_ASSERT_INT_NOT_EQUAL(10, 10);
+	UTEST_ASSERT_PTR_NULL(p1);
+	UTEST_ASSERT_PTR_NOT_NULL(p2);
+
 	UTEST_BEGIN("Suite #1 - Test the tests");
 	RUN_TEST("Test ok", utest_func_ok);
 	RUN_TEST("Test ko", utest_func_ko);
