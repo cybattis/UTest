@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:17 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/13 00:30:50 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/13 12:11:46 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,56 @@
 #define UTEST_OUT		STDERR_FILENO
 #define UT_TIMEOUT		2
 
+/*     Utils    */
+/* ************ */
+
+#define UT_IGNORE		-1
+#define UT_FAIL			0
+#define UT_PASS			1
+#define UT_SIG			2
+
+#define _RED			"\x1b[31m"
+#define _GREEN			"\x1b[32m"
+#define _YELLOW			"\x1b[33m"
+#define _BLUE			"\x1b[34m"
+#define _MAGENTA		"\x1b[35m"
+#define _CYAN			"\x1b[36m"
+#define _GREY			"\x1b[30m"
+#define _RESET			"\x1b[0m"
+
 #define UT_ERROR		"[\033[31mERROR\033[0m]"
 #define UT_WARNING		"[\033[33mWARNING\033[0m]"
 #define UT_INFO			"[\033[32mINFO\033[0m]"
 #define UT_DEBUG		"[\033[34mDEBUG\033[0m]"
 #define UT_FATAL		"[\033[31mFATAL\033[0m]"
 
-#define get_name(var)	#var
-#define UTEST_DPRINTF(level)	\
-		dprintf(UTEST_OUT, "%s in \033[33m%s\033[0m() /%s:%d: ", level, __FUNCTION__ , __FILE__, __LINE__);
+#define PRINTF_FORMAT(x) _Generic((x), \
+    char: "%c", \
+    signed char: "%hhd", \
+    unsigned char: "%hhu", \
+    signed short: "%hd", \
+    unsigned short: "%hu", \
+    signed int: "%d", \
+    unsigned int: "%u", \
+    long int: "%ld", \
+    unsigned long int: "%lu", \
+    long long int: "%lld", \
+    unsigned long long int: "%llu", \
+    float: "%f", \
+    double: "%f", \
+    long double: "%Lf", \
+    char *: "%s", \
+    void *: "%p")
 
-/* Macros utils */
+#define print(x) printf(PRINTF_FORMAT(x), x)
+#define printnl(x) printf(PRINTF_FORMAT(x), x), printf("\n")
+
+#define UTEST_DPRINTF(level)	\
+		dprintf(UTEST_OUT, "%s in "_YELLOW"%s\033[0m() /%s:%d: ", level, __FUNCTION__ , __FILE__, __LINE__);
+
+#define VAR_NAME(var)	#var
+
+/* Macros print */
 /* ************ */
 
 #define UTEST_PRINT_ASSERT_STR(level, actual, expected)			\
@@ -52,16 +91,21 @@
 		UTEST_DPRINTF(level); dprintf(UTEST_OUT, msg"\n")
 
 #define UTEST_PRINT_ASSERT_PTR(level, var, expected)			\
-		UTEST_DPRINTF(level); dprintf(UTEST_OUT, "Pointer %s %s\n", get_name(var), expected)
+		UTEST_DPRINTF(level); dprintf(UTEST_OUT, "Pointer %s %s\n", VAR_NAME(var), expected)
+
 
 /* *************************** */
-/*        Suite & assert       */
+/*             Suite           */
 /* *************************** */
 
 #define UTEST_BEGIN(suite_name)							utest_begin(suite_name, UTEST_OUT)
 #define RUN_TEST(test_name, func, ...)					run_test(test_name, func, ##__VA_ARGS__)
 #define UTEST_END()										utest_end(UTEST_OUT)
 
+
+/* *************************** */
+/*            Assert           */
+/* *************************** */
 
 #define UTEST_ASSERT_STR_EQUAL(actual, expected)		\
 		if (strcmp(actual, expected))					\
@@ -113,12 +157,6 @@
 #define UTEST_ASSERT_PTR_NOT_NULL(actual)	\
 		if (!actual)						\
 			UTEST_PRINT_ASSERT_PTR(UT_ERROR, actual, "has to be not null")
-
-
-#define UT_IGNORE	-1
-#define UT_FAIL		0
-#define UT_PASS		1
-#define UT_SIG		2
 
 
 /* *************************** */

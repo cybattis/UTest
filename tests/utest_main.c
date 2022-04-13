@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/13 00:34:00 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/13 11:30:08 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,18 @@ int	utest_sigill(void)
 
 int main(void)
 {
+	size_t	n1 = 73810;
+	size_t	n2 = 710;
 	char	*s1 = "coucou";
 	char	*s2 = "nvjorwbvoow";
 	char	*s3 = "coucou";
 	char	*p1 = malloc(4);
 	char	*p2 = NULL;
+
+	printnl('a');    // prints "97" (on an ASCII system)
+	printnl((char)'a');  // prints "a"
+	printnl(123);    // prints "123"
+	printnl(1.234);      // prints "1.234000"
 
 	UTEST_ASSERT_STR_EQUAL(s1, s2);
 	UTEST_ASSERT_STR_NOT_EQUAL(s1, s3);
