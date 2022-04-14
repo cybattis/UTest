@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:17 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/14 13:21:03 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/14 13:21:42 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,11 +116,14 @@
 #define UTEST_BEGIN(suite_name)							utest_begin(suite_name, UTEST_OUT)
 
 /*
- * Usage: RUN_TEST("test_name", function, option)
+ * Usage: RUN_TEST(test_name, function, option)
  *
  * Option:
  *  - UT_PRINT_TEST : Setup a test run for function who print to stdout
  *  - UT_IGNORE : Ignore a test
+ *
+ *  ex: RUN_TEST("Test ko", utest_func_ko, UT_IGNORE);
+ *      RUN_TEST("Test ko", utest_func_ko, UT_PRINT_TEST);
  */
 #define RUN_TEST(test_name, func, ...)					run_test(test_name, func, ##__VA_ARGS__)
 
