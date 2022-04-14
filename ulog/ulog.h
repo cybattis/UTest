@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:27 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/14 19:00:36 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/14 22:47:11 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
 #define NO_WARNING		4
 
 #define NO_DATE			0
-#define DATE			1
+#define NO_TIME			1
+#define DATE			2
 
 #define TIME_FORMAT		NO_DATE
 
@@ -106,6 +107,8 @@ static void get_time(int option)
 	struct timeval tv;
 	long long	ms;
 
+	if (option == NO_TIME)
+		return ;
 	gettimeofday(&tv,NULL);
 	ms = tv.tv_usec / 10000;
 
