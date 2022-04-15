@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/14 12:08:51 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/15 16:15:04 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int utest_func_ok(void)
 
 int utest_func_ko(void)
 {
-	return (1);
+	UTEST_ASSERT_INT_NOT_EQUAL(5, 5);
+	return (0);
 }
 
 int	utest_sigsegv(void)
@@ -72,7 +73,7 @@ int	utest_sigill(void)
 int main(void)
 {
 	unsigned long		n = 4782301478317;
-	unsigned long long	n1 = 47823014783;
+	unsigned long long	n1 = 823014783;
 	char				a = 'a';
 	char				*s1 = "coucou";
 	char				*s2 = "nvjorwbvoow";
@@ -80,11 +81,15 @@ int main(void)
 	char				*p1 = malloc(4);
 	char				*p2 = NULL;
 
-	PRINT_STAMP(UT_ERROR), PRINT_NL;
-	PRINT_STAMP(UT_WARNING), PRINT_NL;
-	PRINT_STAMP(UT_INFO), PRINT_NL;
-	PRINT_STAMP(UT_DEBUG), PRINT_NL;
-	PRINT_STAMP(UT_FATAL), PRINT_NL;
+	PRINT_STAMP(U_ERROR), PRINT_NL;
+	PRINT_STAMP(U_WARNING), PRINT_NL;
+	PRINT_STAMP(U_INFO), PRINT_NL;
+	PRINT_STAMP(U_DEBUG), PRINT_NL;
+	PRINT_STAMP(U_FATAL), PRINT_NL;
+	PRINT_NL;
+
+	PRINT_FORMAT_NL("Heyyyy ");
+	PRINT_FORMAT(n1);
 	PRINT_NL;
 
 	PRINT_MSG_ASSERT_TYPE(n, " Hey ", a);

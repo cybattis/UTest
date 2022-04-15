@@ -6,16 +6,14 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:27 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/14 22:47:11 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/15 15:58:00 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ULOG_H
 #define ULOG_H
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "uinternal.h"
 #include <sys/time.h>
 #include <time.h>
 
@@ -23,46 +21,32 @@
 /*           Settings          */
 /* *************************** */
 
-#define LOG_OFF			0
-#define LOG_ALL			1
-#define NO_DEBUG		2
-#define NO_INFO			3
-#define NO_WARNING		4
-
-#define NO_DATE			0
-#define NO_TIME			1
-#define DATE			2
-
+/*
+ * Set the date and time format of log message
+ *
+ *     NO_DATE - 15:48:59:53 [INFO] lorem ipsum test
+ *     NO_TIME - [INFO] lorem ipsum test
+ *     DATE    - 2022:04:15 15:49:52:03 [INFO] lorem ipsum test
+ * */
 #define TIME_FORMAT		NO_DATE
 
-/* Set which log level to print */
+/*
+ * Set which log level to print
+ * All level below the set will not be print
+ *
+ *     LOG_OFF
+ *     NO_WARNING - Do not print Warning level and below
+ *     NO_DEBUG
+ *     NO_INFO
+ *     LOG_ALL
+ * */
 #define LOG_LEVEL		LOG_ALL
 
-/* Set the output stream */
+/*
+ * Set the output stream
+ * */
 #define ULOG_OUT		STDERR_FILENO
 
-#define _RED			"\x1b[31m"
-#define _GREEN			"\x1b[32m"
-#define _YELLOW			"\x1b[33m"
-#define _BLUE			"\x1b[34m"
-#define _MAGENTA		"\x1b[35m"
-#define _CYAN			"\x1b[36m"
-#define _GREY			"\x1b[30m"
-#define _RESET			"\x1b[0m"
-
-#define UL_ERROR		"["_RED"ERROR"_RESET"]"
-#define UL_WARNING		"["_YELLOW"WARNING"_RESET"]"
-#define UL_INFO			"["_GREEN"INFO"_RESET"]"
-#define UL_DEBUG		"["_BLUE"DEBUG"_RESET"]"
-#define UL_FATAL		"["_RED"FATAL"_RESET"]"
-
-static void get_time(int option);
-
-#define ULOG_FATAL_INTERNAL(msg, ...)	get_time(TIME_FORMAT), dprintf(ULOG_OUT, "%s " msg "\n", UL_FATAL, ##__VA_ARGS__)
-#define ULOG_ERROR_INTERNAL(msg, ...)	get_time(TIME_FORMAT), dprintf(ULOG_OUT, "%s " msg "\n", UL_ERROR, ##__VA_ARGS__)
-#define ULOG_WARNING_INTERNAL(msg, ...)	get_time(TIME_FORMAT), dprintf(ULOG_OUT, "%s " msg "\n", UL_WARNING, ##__VA_ARGS__)
-#define ULOG_INFO_INTERNAL(msg, ...)	get_time(TIME_FORMAT), dprintf(ULOG_OUT, "%s " msg "\n", UL_INFO, ##__VA_ARGS__)
-#define ULOG_DEBUG_INTERNAL(msg, ...)	get_time(TIME_FORMAT), dprintf(ULOG_OUT, "%s " msg "\n", UL_DEBUG, ##__VA_ARGS__)
 
 /* *************************** */
 /*            MACROS           */
@@ -99,6 +83,11 @@ static void get_time(int option);
 	#define ULOG_INFO(msg, ...)			(void)0
 	#define ULOG_DEBUG(msg, ...)		(void)0
 #endif
+
+
+/* *************************** */
+/*     Function definition     */
+/* *************************** */
 
 static void get_time(int option)
 {

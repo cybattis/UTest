@@ -6,17 +6,15 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:17 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/14 13:21:42 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/15 16:14:49 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTEST_H
 #define UTEST_H
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "uinternal.h"
 #include <sys/wait.h>
-#include <unistd.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <strings.h>
@@ -28,6 +26,7 @@
 
 #define UTEST_OUT		STDERR_FILENO
 #define UT_TIMEOUT		2
+#define	UT_VERBOSE		0
 
 /*     Utils    */
 /* ************ */
@@ -41,52 +40,19 @@
 #define UT_PASS			1
 #define UT_SIG			2
 
-#define _RED			"\x1b[31m"
-#define _GREEN			"\x1b[32m"
-#define _YELLOW			"\x1b[33m"
-#define _BLUE			"\x1b[34m"
-#define _MAGENTA		"\x1b[35m"
-#define _CYAN			"\x1b[36m"
-#define _GREY			"\x1b[30m"
-#define _RESET			"\x1b[0m"
-
-#define UT_ERROR		"["_RED"ERROR"_RESET"]"
-#define UT_WARNING		"["_YELLOW"WARNING"_RESET"]"
-#define UT_INFO			"["_GREEN"INFO"_RESET"]"
-#define UT_DEBUG		"["_BLUE"DEBUG"_RESET"]"
-#define UT_FATAL		"["_RED"FATAL"_RESET"]"
-
-#define VAR_NAME(var)	#var
-
-#define PRINTF_FORMAT(x) _Generic((x), \
-	char: "%c", \
-	signed char: "%hhd", \
-	unsigned char: "%hhu", \
-	signed short: "%hd", \
-	unsigned short: "%hu", \
-	signed int: "%d", \
-	unsigned int: "%u", \
-	long int: "%ld", \
-	unsigned long int: "%lu", \
-	long long int: "%lld", \
-	unsigned long long int: "%llu", \
-	float: "%f", \
-	double: "%f", \
-	long double: "%Lf", \
-	char *: "%s", \
-	void *: "%p", \
-	default: "%zu")
-
-
 /* Macros print */
 /* ************ */
+
+#define PRINT_NL				dprintf(STDERR_FILENO, "\n")
 
 /* [LEVEL] in function() /path/to/file:line: */
 #define PRINT_STAMP(level) \
 		dprintf(UTEST_OUT, "%s in "_YELLOW"%s\033[0m() /%s:%d: ", level, __FUNCTION__ , __FILE__, __LINE__)
 
-#define PRINT_NL \
-		dprintf(STDERR_FILENO, "\n")
+#define	PRINT_FORMAT(X)			dprintf(STDERR_FILENO, PRINTF_FORMAT(X), X)
+#define	PRINT_FORMAT_NL(X) \
+		dprintf(STDERR_FILENO, PRINTF_FORMAT(X), X), \
+		PRINT_NL
 
 #define PRINT_MSG_ASSERT_TYPE(actual, msg, expected)				\
 		dprintf(STDERR_FILENO, PRINTF_FORMAT(actual), actual),		\
@@ -113,24 +79,27 @@
 /*
  * Start and initialize a test suite and give it a name
  */
-#define UTEST_BEGIN(suite_name)							utest_begin(suite_name, UTEST_OUT)
+#define UTEST_BEGIN(suite_name) \
+		utest_begin(suite_name, UTEST_OUT)
 
 /*
  * Usage: RUN_TEST(test_name, function, option)
  *
  * Option:
- *  - UT_PRINT_TEST : Setup a test run for function who print to stdout
- *  - UT_IGNORE : Ignore a test
+ *  - UT_PRINT_TEST : Setup a test for a function who print to stdout
+ *  - UT_IGNORE : Ignore test
  *
  *  ex: RUN_TEST("Test ko", utest_func_ko, UT_IGNORE);
  *      RUN_TEST("Test ko", utest_func_ko, UT_PRINT_TEST);
  */
-#define RUN_TEST(test_name, func, ...)					run_test(test_name, func, ##__VA_ARGS__)
+#define RUN_TEST(test_name, func, ...) \
+		run_test(test_name, func, ##__VA_ARGS__)
 
 /*
  * Print stats of the test suit
  */
-#define UTEST_END()										utest_end(UTEST_OUT)
+#define UTEST_END() \
+		utest_end(UTEST_OUT)
 
 
 /* *************************** */
@@ -141,57 +110,57 @@
 
 #define UTEST_ASSERT_STR_EQUAL(actual, expected)		\
 		if (strcmp(actual, expected))					\
-			UTEST_PRINT_ASSERT_ERROR(UT_ERROR, "Expected \"%s\" --> Actual \"%s\"", actual, expected)
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected \"%s\" --> Actual \"%s\"", actual, expected)
 
 #define UTEST_ASSERT_STR_NOT_EQUAL(actual, expected)	\
 		if (!strcmp(actual, expected))					\
-			UTEST_PRINT_ASSERT_ERROR(UT_ERROR, "Expected \"%s\" --> Actual \"%s\"", actual, expected)
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected \"%s\" --> Actual \"%s\"", actual, expected)
 
 /* Assert Bool */
 
 #define UTEST_ASSERT_TRUE(value)		\
 		if (value)						\
-			UTEST_PRINT_ASSERT_ERROR(UT_ERROR, "Expected TRUE is FALSE")
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected TRUE is FALSE")
 
 #define UTEST_ASSERT_FALSE(value)		\
 		if (!value)						\
-			UTEST_PRINT_ASSERT_ERROR(UT_ERROR, "Expected FALSE is TRUE")
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected FALSE is TRUE")
 
 /* Assert all type of integer */
 
 #define UTEST_ASSERT_INT_EQUAL(actual, expected)			\
 		if (actual != expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(UT_ERROR, actual, " is not equal to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is not equal to ", expected)
 
 #define UTEST_ASSERT_INT_NOT_EQUAL(actual, expected)		\
 		if (actual == expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(UT_ERROR, actual, " is equal to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is equal to ", expected)
 
 #define UTEST_ASSERT_INT_GREATER(actual, expected)			\
 		if (actual <= expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(UT_ERROR, actual, " is not greater than ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is not greater than ", expected)
 
 #define UTEST_ASSERT_INT_GREATER_EQUAL(actual, expected)	\
 		if (actual < expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(UT_ERROR, actual, " is not greater or equal to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is not greater or equal to ", expected)
 
 #define UTEST_ASSERT_INT_LESSER(actual, expected)			\
 		if (actual >= expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(UT_ERROR, actual, " is greater to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is greater to ", expected)
 
 #define UTEST_ASSERT_INT_LESSER_EQUAL(actual, expected)		\
 		if (actual > expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(UT_ERROR, actual, " is greater or equal to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is greater or equal to ", expected)
 
 /* Assert pointer */
 
 #define UTEST_ASSERT_PTR_NULL(actual)		\
 		if (actual)							\
-			UTEST_PRINT_ASSERT_ERROR(UT_ERROR, VAR_NAME(actual) " is not null")
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, VAR_NAME(actual) " is not null")
 
 #define UTEST_ASSERT_PTR_NOT_NULL(actual)	\
 		if (!actual)						\
-			UTEST_PRINT_ASSERT_ERROR(UT_ERROR, VAR_NAME(actual) " is null")
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, VAR_NAME(actual) " is null")
 
 
 /* *************************** */
@@ -282,25 +251,25 @@ static void	print_test_status(int status, char *test_name, int fd)
 {
 	dprintf(STDERR_FILENO, "%d - %s: ", utest_suite.count, test_name);
 	if (status == 0)
-		dprintf(fd, "\033[32m[OK]\n\033[0m");
+		dprintf(fd, _RED "[OK]\n"_RESET);
 	else if (status == 1)
-		dprintf(fd, "\033[31m[KO]\n\033[0m");
+		dprintf(fd, _GREEN "[KO]\n"_RESET);
 	else if (status == SIGSEGV)
-		dprintf(fd, "\033[33m[SIGSEGV]\n\033[0m");
+		dprintf(fd, _YELLOW "[SIGSEGV]\n"_RESET);
 	else if (status == SIGBUS)
-		dprintf(fd, "\033[33m[SIGBUS]\n\033[0m");
+		dprintf(fd, _YELLOW "[SIGBUS]\n"_RESET);
 	else if (status == SIGABRT)
-		dprintf(fd, "\033[33m[SIGABRT]\n\033[0m");
+		dprintf(fd, _YELLOW "[SIGABRT]\n"_RESET);
 	else if (status == SIGFPE)
-		dprintf(fd, "\033[33m[SIGFPE]\n\033[0m");
+		dprintf(fd, _YELLOW "[SIGFPE]\n"_RESET);
 	else if (status == SIGPIPE)
-		dprintf(fd, "\033[33m[SIGPIPE]\n\033[0m");
+		dprintf(fd, _YELLOW "[SIGPIPE]\n"_RESET);
 	else if (status == SIGILL)
-		dprintf(fd, "\033[33m[SIGILL]\n\033[0m");
+		dprintf(fd, _YELLOW "[SIGILL]\n"_RESET);
 	else if (status == SIGALRM)
-		dprintf(fd, "\033[1;30m[TIMEOUT]\n\033[0m");
+		dprintf(fd, _GREY "[TIMEOUT]\n"_RESET);
 	else
-		dprintf(fd, "\033[34m[IGNORE]\n\033[0m");
+		dprintf(fd, "\033[34m[IGNORE]\n"_RESET);
 }
 
 #endif /* UTEST_H */

@@ -6,12 +6,11 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/14 18:52:48 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/15 14:00:20 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ulog.h"
-#include <string.h>
 
 int main(void)
 {
@@ -27,6 +26,8 @@ int main(void)
 		usleep(10000);
 		ULOG_INFO("Test Info log");
 	}
+	ULOG_ERROR("errno :%s", GET_ERRNO);
 	ULOG_DEBUG("Test Debug log");
+	strerror(errno);
 	return (0);
 }

@@ -11,7 +11,7 @@ CFLAGS		=	-Wall -Wextra -MD $(INCLUDE)
 
 RM			=	rm -rf
 
-INCLUDE		=	-I utest -I ulog
+INCLUDE		=	-I src
 OBJSDIR		=	obj
 
 # Source files
