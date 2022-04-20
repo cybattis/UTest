@@ -72,46 +72,46 @@ int	utest_sigill(void)
 
 int main(void)
 {
-	unsigned long		n = 4782301478317;
-	unsigned long long	n1 = 823014783;
-	char				a = 'a';
-	char				*s1 = "coucou";
-	char				*s2 = "nvjorwbvoow";
-	char				*s3 = "coucou";
-	char				*p1 = malloc(4);
-	char				*p2 = NULL;
-
-	PRINT_STAMP(U_ERROR), PRINT_NL;
-	PRINT_STAMP(U_WARNING), PRINT_NL;
-	PRINT_STAMP(U_INFO), PRINT_NL;
-	PRINT_STAMP(U_DEBUG), PRINT_NL;
-	PRINT_STAMP(U_FATAL), PRINT_NL;
-	PRINT_NL;
-
-	PRINT_FORMAT_NL("Heyyyy ");
-	PRINT_FORMAT(n1);
-	PRINT_NL;
-
-	PRINT_MSG_ASSERT_TYPE(n, " Hey ", a);
-	PRINT_MSG_ASSERT_TYPE('P', " Coucou ", (unsigned int)5678);
-	PRINT_NL;
-
-	UTEST_ASSERT_STR_EQUAL(s1, s2);
-	UTEST_ASSERT_STR_NOT_EQUAL(s1, s3);
-
-	UTEST_ASSERT_INT_EQUAL(10, 50);
-	UTEST_ASSERT_INT_EQUAL(n1, n);
-	UTEST_ASSERT_INT_NOT_EQUAL(10, 10);
-	UTEST_ASSERT_INT_GREATER(5, 10);
-	UTEST_ASSERT_INT_GREATER_EQUAL(5, 10);
-	UTEST_ASSERT_INT_LESSER(10, 5);
-	UTEST_ASSERT_INT_LESSER_EQUAL(10, 5);
-
-	UTEST_ASSERT_PTR_NULL(p1);
-	UTEST_ASSERT_PTR_NOT_NULL(p2);
-
-	UTEST_ASSERT_FALSE(0);
-	UTEST_ASSERT_TRUE(1);
+//	unsigned long		n = 4782301478317;
+//	unsigned long long	n1 = 823014783;
+//	char				a = 'a';
+//	char				*s1 = "coucou";
+//	char				*s2 = "nvjorwbvoow";
+//	char				*s3 = "coucou";
+//	char				*p1 = malloc(4);
+//	char				*p2 = NULL;
+//
+//	PRINT_STAMP(U_ERROR), PRINT_NL;
+//	PRINT_STAMP(U_WARNING), PRINT_NL;
+//	PRINT_STAMP(U_INFO), PRINT_NL;
+//	PRINT_STAMP(U_DEBUG), PRINT_NL;
+//	PRINT_STAMP(U_FATAL), PRINT_NL;
+//	PRINT_NL;
+//
+//	PRINT_FORMAT_NL("Heyyyy ");
+//	PRINT_FORMAT(n1);
+//	PRINT_NL;
+//
+//	PRINT_MSG_ASSERT_TYPE(n, " Hey ", a);
+//	PRINT_MSG_ASSERT_TYPE('P', " Coucou ", (unsigned int)5678);
+//	PRINT_NL;
+//
+//	UTEST_ASSERT_STR_EQUAL(s1, s2);
+//	UTEST_ASSERT_STR_NOT_EQUAL(s1, s3);
+//
+//	UTEST_ASSERT_INT_EQUAL(10, 50);
+//	UTEST_ASSERT_INT_EQUAL(n1, n);
+//	UTEST_ASSERT_INT_NOT_EQUAL(10, 10);
+//	UTEST_ASSERT_INT_GREATER(5, 10);
+//	UTEST_ASSERT_INT_GREATER_EQUAL(5, 10);
+//	UTEST_ASSERT_INT_LESSER(10, 5);
+//	UTEST_ASSERT_INT_LESSER_EQUAL(10, 5);
+//
+//	UTEST_ASSERT_PTR_NULL(p1);
+//	UTEST_ASSERT_PTR_NOT_NULL(p2);
+//
+//	UTEST_ASSERT_FALSE(0);
+//	UTEST_ASSERT_TRUE(1);
 
 	UTEST_BEGIN("Suite #1 - Test the tests");
 	RUN_TEST("Test ok", utest_func_ok);

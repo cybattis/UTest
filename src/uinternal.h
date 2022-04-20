@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/15 13:33:41 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/15 15:02:19 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/20 15:19:37 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,6 @@
 #define U_DEBUG			"["_BLUE"DEBUG"_RESET"]"
 #define U_FATAL			"["_RED"FATAL"_RESET"]"
 
-/*
- * Get
- * */
 #define VAR_NAME(var)	#var
 
 #define PRINTF_FORMAT(x) _Generic((x), \
@@ -61,7 +58,8 @@
 	char *: "%s", \
 	void *: "%p")
 
-#define GET_ERRNO			strerror(errno)
+#define GET_ERRNO				strerror(errno)
+#define PRINT_ERRNO(msg)		dprintf(STDERR_FILENO, msg"%s\n", GET_ERRNO)
 
 /* *************************** */
 /*          MACRO ULOG         */

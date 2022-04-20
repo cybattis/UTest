@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:17 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/15 16:14:49 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/20 17:35:14 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@
 /*  Ignore a test */
 #define UT_IGNORE		-1
 
-#define UT_FAIL			0
-#define UT_PASS			1
+#define UT_PASS			0
+#define UT_FAIL			1
 #define UT_SIG			2
 
 /* Macros print */
@@ -110,57 +110,57 @@
 
 #define UTEST_ASSERT_STR_EQUAL(actual, expected)		\
 		if (strcmp(actual, expected))					\
-			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected \"%s\" --> Actual \"%s\"", actual, expected)
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected \"%s\" --> Actual \"%s\"", actual, expected), exit(1)
 
 #define UTEST_ASSERT_STR_NOT_EQUAL(actual, expected)	\
 		if (!strcmp(actual, expected))					\
-			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected \"%s\" --> Actual \"%s\"", actual, expected)
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected \"%s\" --> Actual \"%s\"", actual, expected), exit(1)
 
 /* Assert Bool */
 
 #define UTEST_ASSERT_TRUE(value)		\
 		if (value)						\
-			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected TRUE is FALSE")
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected TRUE is FALSE"), exit(1)
 
 #define UTEST_ASSERT_FALSE(value)		\
 		if (!value)						\
-			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected FALSE is TRUE")
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, "Expected FALSE is TRUE"), exit(1)
 
 /* Assert all type of integer */
 
 #define UTEST_ASSERT_INT_EQUAL(actual, expected)			\
 		if (actual != expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is not equal to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, VAR_NAME(actual) " is not equal to ", expected), exit(1)
 
 #define UTEST_ASSERT_INT_NOT_EQUAL(actual, expected)		\
 		if (actual == expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is equal to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, VAR_NAME(actual) " cannot be equal to ", expected), exit(1)
 
 #define UTEST_ASSERT_INT_GREATER(actual, expected)			\
 		if (actual <= expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is not greater than ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is not greater than ", expected), exit(1)
 
 #define UTEST_ASSERT_INT_GREATER_EQUAL(actual, expected)	\
 		if (actual < expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is not greater or equal to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is not greater or equal to ", expected), exit(1)
 
 #define UTEST_ASSERT_INT_LESSER(actual, expected)			\
 		if (actual >= expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is greater to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is greater to ", expected), exit(1)
 
 #define UTEST_ASSERT_INT_LESSER_EQUAL(actual, expected)		\
 		if (actual > expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is greater or equal to ", expected)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, " is greater or equal to ", expected), exit(1)
 
 /* Assert pointer */
 
 #define UTEST_ASSERT_PTR_NULL(actual)		\
 		if (actual)							\
-			UTEST_PRINT_ASSERT_ERROR(U_ERROR, VAR_NAME(actual) " is not null")
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, VAR_NAME(actual) " is not null"), exit(1)
 
 #define UTEST_ASSERT_PTR_NOT_NULL(actual)	\
 		if (!actual)						\
-			UTEST_PRINT_ASSERT_ERROR(U_ERROR, VAR_NAME(actual) " is null")
+			UTEST_PRINT_ASSERT_ERROR(U_ERROR, VAR_NAME(actual) " is null"), exit(1)
 
 
 /* *************************** */
@@ -251,9 +251,9 @@ static void	print_test_status(int status, char *test_name, int fd)
 {
 	dprintf(STDERR_FILENO, "%d - %s: ", utest_suite.count, test_name);
 	if (status == 0)
-		dprintf(fd, _RED "[OK]\n"_RESET);
+		dprintf(fd, _GREEN "[OK]\n"_RESET);
 	else if (status == 1)
-		dprintf(fd, _GREEN "[KO]\n"_RESET);
+		dprintf(fd, _RED "[KO]\n"_RESET);
 	else if (status == SIGSEGV)
 		dprintf(fd, _YELLOW "[SIGSEGV]\n"_RESET);
 	else if (status == SIGBUS)
