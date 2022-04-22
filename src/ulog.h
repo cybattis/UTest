@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:27 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/15 15:58:00 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:12:55 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,42 @@
 #include "uinternal.h"
 #include <sys/time.h>
 #include <time.h>
+
+/* *************************** */
+/*             CORE            */
+/* *************************** */
+
+/*
+ * Define for LOG_LEVEL
+ * */
+#define LOG_OFF			0
+#define LOG_ALL			1
+#define NO_DEBUG		2
+#define NO_INFO			3
+#define NO_WARNING		4
+
+/*
+ * Define for TIME_FORMAT
+ * */
+#define NO_DATE			0
+#define NO_TIME			1
+#define DATE			2
+
+#define ULOG_FATAL_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+		dprintf(ULOG_OUT, "%s " msg "\n", U_FATAL, ##__VA_ARGS__)
+
+#define ULOG_ERROR_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+		dprintf(ULOG_OUT, "%s " msg "\n", U_ERROR, ##__VA_ARGS__)
+
+#define ULOG_WARNING_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+		dprintf(ULOG_OUT, "%s " msg "\n", U_WARNING, ##__VA_ARGS__)
+
+#define ULOG_INFO_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+		dprintf(ULOG_OUT, "%s " msg "\n", U_INFO, ##__VA_ARGS__)
+
+#define ULOG_DEBUG_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+		dprintf(ULOG_OUT, "%s " msg "\n", U_DEBUG, ##__VA_ARGS__)
+
 
 /* *************************** */
 /*           Settings          */

@@ -130,11 +130,11 @@
 
 #define UTEST_ASSERT_INT_EQUAL(actual, expected)			\
 		if (actual != expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, VAR_NAME(actual) " is not equal to ", expected), exit(1)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, "", VAR_NAME(actual) " is not equal to ", expected), exit(1)
 
 #define UTEST_ASSERT_INT_NOT_EQUAL(actual, expected)		\
 		if (actual == expected)								\
-			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, actual, VAR_NAME(actual) " cannot be equal to ", expected), exit(1)
+			UTEST_PRINT_ASSERT_ERROR_INT(U_ERROR, "", VAR_NAME(actual) " cannot be equal to ", expected), exit(1)
 
 #define UTEST_ASSERT_INT_GREATER(actual, expected)			\
 		if (actual <= expected)								\

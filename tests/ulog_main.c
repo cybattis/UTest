@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 22:15:58 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/15 14:00:20 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:14:55 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ int main(void)
 		usleep(10000);
 		ULOG_INFO("Test Info log");
 	}
-	ULOG_ERROR("errno :%s", GET_ERRNO);
+	errno = ECHILD;
+	ULOG_ERROR("errno : %s", GET_ERRNO);
+	errno = 0;
+	ULOG_ERROR("errno : %s", GET_ERRNO);
 	ULOG_DEBUG("Test Debug log");
 	strerror(errno);
 	return (0);

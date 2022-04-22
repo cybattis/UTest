@@ -61,47 +61,4 @@
 #define GET_ERRNO				strerror(errno)
 #define PRINT_ERRNO(msg)		dprintf(STDERR_FILENO, msg"%s\n", GET_ERRNO)
 
-/* *************************** */
-/*          MACRO ULOG         */
-/* *************************** */
-
-/*
- * Define for LOG_LEVEL
- * */
-#define LOG_OFF			0
-#define LOG_ALL			1
-#define NO_DEBUG		2
-#define NO_INFO			3
-#define NO_WARNING		4
-
-/*
- * Define for TIME_FORMAT
- * */
-#define NO_DATE			0
-#define NO_TIME			1
-#define DATE			2
-
-static void get_time(int option);
-
-#define ULOG_FATAL_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
-		dprintf(ULOG_OUT, "%s " msg "\n", U_FATAL, ##__VA_ARGS__)
-
-#define ULOG_ERROR_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
-		dprintf(ULOG_OUT, "%s " msg "\n", U_ERROR, ##__VA_ARGS__)
-
-#define ULOG_WARNING_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
-		dprintf(ULOG_OUT, "%s " msg "\n", U_WARNING, ##__VA_ARGS__)
-
-#define ULOG_INFO_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
-		dprintf(ULOG_OUT, "%s " msg "\n", U_INFO, ##__VA_ARGS__)
-
-#define ULOG_DEBUG_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
-		dprintf(ULOG_OUT, "%s " msg "\n", U_DEBUG, ##__VA_ARGS__)
-
-/* *************************** */
-/*         MACRO UTEST         */
-/* *************************** */
-
-
-
 #endif //UINTERNAL_H

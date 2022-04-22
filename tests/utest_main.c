@@ -20,7 +20,10 @@ int utest_func_ok(void)
 
 int utest_func_ko(void)
 {
-	UTEST_ASSERT_INT_NOT_EQUAL(5, 5);
+	int i, j;
+
+	i = j = 5;
+	UTEST_ASSERT_INT_NOT_EQUAL(i, j);
 	return (0);
 }
 
