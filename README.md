@@ -1,57 +1,13 @@
-# UTest
+# Utest & Ulog
 Small - *Header-only* - unit test framework
 
-## Setup Macro for test suite
+Usage: clone this repo and add ```-I Utest```in your Makefile, and you're good to go.
 
-```c
-    /* Start and initialize a test suite and give it a name */
-    UTEST_BEGIN(suite_name)
+You can find all information inside the included [man_ulog.md](man_ulog.md) & [man_utest.md](man_utest.md) files.
 
-    /* Usage: RUN_TEST(test_name, function, option)
-     *
-     * Option:
-     *  - UT_PRINT_TEST : Setup a test for a function who print to stdout
-     *  - UT_IGNORE : Ignore test
-     *
-     *  ex: RUN_TEST("Test ko", utest_func_ko, UT_IGNORE);
-     *      RUN_TEST("Test ko", utest_func_ko, UT_PRINT_TEST); */
-    RUN_TEST(test_name, func, ...)  
+### Exemple
 
-    /* Print stats of the test suit */
-    UTEST_END()
-```
-
-## Macro settings
-
-```c
-    /* Setup the output stream */
-    UTEST_OUT	STDERR_FILENO
-    /* Setup how many sec before timeout */
-    UT_TIMEOUT	2
-```
-
-## Assert macro
-
-```c
-UTEST_ASSERT_STR_EQUAL(actual, expected)
-UTEST_ASSERT_STR_NOT_EQUAL(actual, expected)
-
-UTEST_ASSERT_TRUE(value)
-UTEST_ASSERT_FALSE(value)
-
-UTEST_ASSERT_INT_EQUAL(actual, expected)
-UTEST_ASSERT_INT_NOT_EQUAL(actual, expected)
-UTEST_ASSERT_INT_GREATER(actual, expected)
-UTEST_ASSERT_INT_GREATER_EQUAL(actual, expected)
-UTEST_ASSERT_INT_LESSER(actual, expected)
-UTEST_ASSERT_INT_LESSER_EQUAL(actual, expected)
-
-UTEST_ASSERT_PTR_NULL(actual)
-UTEST_ASSERT_PTR_NOT_NULL(actual)
-
-```
-
-#### Exemple
+#### Utest suite
 
 ```c
 int main(void)
