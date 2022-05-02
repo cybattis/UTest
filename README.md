@@ -1,7 +1,7 @@
 # Utest & Ulog
 Small - *Header-only* - unit test framework
 
-Usage: clone this repo and add ```-I Utest``` in your Makefile, and you're good to go.
+Usage: clone this repo and add ```-I UTest``` in your Makefile, and you're good to go.
 
 You can find all information inside the included [man_ulog.md](man_ulog.md) & [man_utest.md](man_utest.md) files.
 
