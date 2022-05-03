@@ -6,7 +6,7 @@
 /*   By: cybattis <cybattis@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 11:28:27 by cybattis          #+#    #+#             */
-/*   Updated: 2022/04/22 15:12:55 by cybattis         ###   ########.fr       */
+/*   Updated: 2022/05/03 13:46:45 by cybattis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,19 @@
 #define NO_TIME			1
 #define DATE			2
 
-#define ULOG_FATAL_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+#define ULOG_FATAL_INTERNAL(msg, ...)	ulog_get_time(TIME_FORMAT), \
 		dprintf(ULOG_OUT, "%s " msg "\n", U_FATAL, ##__VA_ARGS__)
 
-#define ULOG_ERROR_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+#define ULOG_ERROR_INTERNAL(msg, ...)	ulog_get_time(TIME_FORMAT), \
 		dprintf(ULOG_OUT, "%s " msg "\n", U_ERROR, ##__VA_ARGS__)
 
-#define ULOG_WARNING_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+#define ULOG_WARNING_INTERNAL(msg, ...)	ulog_get_time(TIME_FORMAT), \
 		dprintf(ULOG_OUT, "%s " msg "\n", U_WARNING, ##__VA_ARGS__)
 
-#define ULOG_INFO_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+#define ULOG_INFO_INTERNAL(msg, ...)	ulog_get_time(TIME_FORMAT), \
 		dprintf(ULOG_OUT, "%s " msg "\n", U_INFO, ##__VA_ARGS__)
 
-#define ULOG_DEBUG_INTERNAL(msg, ...)	get_time(TIME_FORMAT), \
+#define ULOG_DEBUG_INTERNAL(msg, ...)	ulog_get_time(TIME_FORMAT), \
 		dprintf(ULOG_OUT, "%s " msg "\n", U_DEBUG, ##__VA_ARGS__)
 
 
@@ -64,7 +64,7 @@
  *     NO_TIME - [INFO] lorem ipsum test
  *     DATE    - 2022:04:15 15:49:52:03 [INFO] lorem ipsum test
  * */
-#define TIME_FORMAT		NO_DATE
+#define TIME_FORMAT		NO_TIME
 
 /*
  * Set which log level to print
@@ -125,7 +125,7 @@
 /*     Function definition     */
 /* *************************** */
 
-static void get_time(int option)
+static void ulog_get_time(int option)
 {
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
